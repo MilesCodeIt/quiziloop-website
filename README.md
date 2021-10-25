@@ -1,34 +1,36 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Quiziloop
 
-## Getting Started
+> Quiz player that features "quizlists", randomizer, quiz sharing, and even more !
 
-First, run the development server:
+## Still in development.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+I use Vercel to deploy the app and the serverless functions.
+I also use MongoDB Atlas for the database.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Development
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### How it works
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+When you load the homepage `/`, it requests the `/api/quiz/latest` endpoint.
+This endpoint returns the latest publicly submitted quizes.
+So basically, it just returns the `author`, `name` and `creationDate`.
 
-## Learn More
+When you click on this quiz, you'll be redirected to `/quiz/:quizId`.
+To get the quiz informations, we make another request to `/api/quiz/:quizId/informations` endpoint.
+It returns the same thing that we had on the homepage (`author`, `name`, `creationDate`)
+but with more precisions (`timesPlayed`, `questionCount`, ...).
 
-To learn more about Next.js, take a look at the following resources:
+Now, when you click `Play`, it makes a request to `/api/quiz/:quizId/question/initialize` endpoint.
+It will return every questions that is the quiz have.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+So, you play the quiz, and every question that you submit, will request `/api/quiz/:quizId/question/:questionId` endpoint. This endpoint, returns only if your `answer` was `true` or `false`.
+Depending on the quiz settings, it can returns 
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Start development server
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Clone this repository, `cp .env.local.sample .env.local`,
+edit the `.env.local` file to match with your configuration,
+install depedencies with `yarn`,
+then run development server with `yarn dev`.
